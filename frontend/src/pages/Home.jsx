@@ -16,7 +16,7 @@ export default function Home() {
   useEffect(() => {
     const fetchCars = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/cars');
+        const response = await fetch('https://self-drive-rental-car-autoelite.onrender.com/api/cars');
         const data = await response.json();
         setDbCars(data.slice(0, 4)); 
         setLoading(false);

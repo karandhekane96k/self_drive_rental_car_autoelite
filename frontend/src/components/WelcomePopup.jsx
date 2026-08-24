@@ -21,8 +21,8 @@ export default function WelcomePopup({ onClose }) {
     const toastId = toast.loading(isLogin ? 'Authenticating...' : 'Creating your account...');
 
     const url = isLogin 
-      ? 'http://localhost:5000/api/users/login' 
-      : 'http://localhost:5000/api/users';
+      ? 'https://self-drive-rental-car-autoelite.onrender.com/api/users/login' 
+      : 'https://self-drive-rental-car-autoelite.onrender.com/api/users';
 
     const bodyData = isLogin 
       ? { email, password } 

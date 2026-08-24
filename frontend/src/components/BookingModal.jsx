@@ -65,7 +65,7 @@ export default function BookingModal({ car, isOpen, onClose }) {
   // NEW: Fetch dynamic QR code when step 2 loads
   useEffect(() => {
     if (step === 2) {
-      fetch('http://localhost:5000/api/settings')
+      fetch('https://self-drive-rental-car-autoelite.onrender.com/api/settings')
         .then(res => res.json())
         .then(data => setGlobalQrCode(data.qrCodeUrl))
         .catch(err => console.error('Failed to fetch QR'));
@@ -143,7 +143,7 @@ export default function BookingModal({ car, isOpen, onClose }) {
     };
 
     try {
-      const response = await fetch('http://localhost:5000/api/bookings', {
+      const response = await fetch('https://self-drive-rental-car-autoelite.onrender.com/api/bookings', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(bookingData)

@@ -26,7 +26,7 @@ const upload = multer({ storage });
 
 // 3. The actual route that catches the file
 router.post('/', upload.single('image'), (req, res) => {
-  const fullUrl = `http://localhost:5000/uploads/${req.file.filename}`;
+  const fullUrl = `https://self-drive-rental-car-autoelite.onrender.com/uploads/${req.file.filename}`;
   res.send({
     message: 'Image Uploaded Successfully',
     image: fullUrl,

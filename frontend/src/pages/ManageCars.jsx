@@ -24,7 +24,7 @@ export default function ManageCars() {
 
   const fetchCars = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/cars?admin=true');
+      const response = await fetch('https://self-drive-rental-car-autoelite.onrender.com/api/cars?admin=true');
       const data = await response.json();
       setCars(data);
       setLoading(false);
@@ -71,7 +71,7 @@ export default function ManageCars() {
         const uploadData = new FormData();
         uploadData.append('image', imageFile);
 
-        const uploadRes = await fetch('http://localhost:5000/api/upload', {
+        const uploadRes = await fetch('https://self-drive-rental-car-autoelite.onrender.com/api/upload', {
           method: 'POST',
           body: uploadData,
         });
@@ -82,13 +82,13 @@ export default function ManageCars() {
         if (uploadRes.ok && returnedPath) {
           imageUrl = returnedPath.startsWith('http') 
             ? returnedPath 
-            : `http://localhost:5000${returnedPath}`;
+            : `https://self-drive-rental-car-autoelite.onrender.com${returnedPath}`;
         } else {
           throw new Error(uploadResult.message || 'Image upload failed');
         }
       }
 
-      const response = await fetch(`http://localhost:5000/api/cars/${editingCar._id}`, {
+      const response = await fetch(`https://self-drive-rental-car-autoelite.onrender.com/api/cars/${editingCar._id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...formData, image: imageUrl })
@@ -109,7 +109,7 @@ export default function ManageCars() {
   // Toggle Public Visibility (Hidden / Published)
   const handleToggleVisibility = async (car) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/cars/${car._id}/status`, {
+      const response = await fetch(`https://self-drive-rental-car-autoelite.onrender.com/api/cars/${car._id}/status`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ isVisible: !car.isVisible })
@@ -129,7 +129,7 @@ export default function ManageCars() {
   // Toggle Rental Status (Available / Taken)
   const handleToggleAvailability = async (car) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/cars/${car._id}/status`, {
+      const response = await fetch(`https://self-drive-rental-car-autoelite.onrender.com/api/cars/${car._id}/status`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ isAvailable: !car.isAvailable })
@@ -149,7 +149,7 @@ export default function ManageCars() {
   const handleDelete = async (id) => {
     if (!window.confirm('Are you sure you want to delete this vehicle?')) return;
     try {
-      const response = await fetch(`http://localhost:5000/api/cars/${id}`, { method: 'DELETE' });
+      const response = await fetch(`https://self-drive-rental-car-autoelite.onrender.com/api/cars/${id}`, { method: 'DELETE' });
       if (response.ok) {
         toast.success('Vehicle deleted');
         fetchCars();
