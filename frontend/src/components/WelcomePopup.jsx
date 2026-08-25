@@ -18,7 +18,10 @@ export default function WelcomePopup({ onClose }) {
     e.preventDefault();
     setLoading(true);
     
-    const toastId = toast.loading(isLogin ? 'Authenticating...' : 'Creating your account...');
+    // Industry Standard: Distinct loading message with a spinner/emoji indicator
+    const toastId = toast.loading(
+      isLogin ? '🔄 Authenticating credentials...' : '⏳ Creating your Nandi Cars account...'
+    );
 
     const url = isLogin 
       ? 'https://self-drive-rental-car-autoelite.onrender.com/api/users/login' 
@@ -38,16 +41,24 @@ export default function WelcomePopup({ onClose }) {
       const data = await response.json();
 
       if (!response.ok) {
+        // Update the loading toast to an error toast
         toast.error(data.message || 'Authentication failed', { id: toastId });
         setLoading(false);
       } else {
-        toast.success(isLogin ? 'Successfully Logged In!' : 'Account Created Successfully!', { id: toastId });
-        
-        setUser(data); 
-        onClose(); 
+        if (isLogin) {
+          // Update loading toast to success toast
+          toast.success('🎉 Welcome back! Successfully logged in.', { id: toastId });
+          setUser(data); 
+          onClose(); 
+        } else {
+          toast.success('✨ Account created successfully! Please sign in.', { id: toastId });
+          setIsLogin(true);
+          setPassword('');
+          setLoading(false);
+        }
       }
     } catch (error) {
-      toast.error('Could not connect to the server.', { id: toastId });
+      toast.error('⚠️ Could not connect to the server. Please try again.', { id: toastId });
       setLoading(false);
     }
   };
@@ -58,7 +69,7 @@ export default function WelcomePopup({ onClose }) {
         
         <button 
           onClick={onClose}
-          className="absolute top-5 right-5 text-gray-400 hover:text-red-600 transition-colors z-10 bg-gray-100 hover:bg-red-50 p-2 rounded-full"
+          className="absolute top-5 right-5 text-gray-400 hover:text-red-600 transition-colors z-10 bg-gray-100 hover:bg-red-50 p-2 rounded-full cursor-pointer"
         >
           <FaTimes size={20} />
         </button>
@@ -66,15 +77,14 @@ export default function WelcomePopup({ onClose }) {
         {/* Left Side - Common Premium Branding */}
         <div className="hidden md:flex flex-col justify-between w-2/5 bg-gray-900 p-12 text-white relative overflow-hidden">
           <div className="relative z-10">
-            {/* UPDATED: Universal Welcome Message */}
-            <h2 className="text-4xl font-bold mb-6">Welcome to AutoElite</h2>
+            <h2 className="text-4xl font-bold mb-6">Welcome to Nandi Cars</h2>
             <p className="text-gray-400 text-base leading-relaxed">
               Experience the pinnacle of automotive excellence. Sign in or create an account to access our exclusive fleet, manage your bookings, and elevate your journey.
             </p>
           </div>
           <div className="relative z-10 mt-auto">
             <h2 className="text-3xl font-bold uppercase tracking-widest">
-              <span className="text-red-600">Auto</span>Elite
+              <span className="text-red-600">Nandi</span> Cars
             </h2>
           </div>
           <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-red-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
@@ -117,9 +127,13 @@ export default function WelcomePopup({ onClose }) {
             <button 
               type="submit" 
               disabled={loading}
-              className="w-full bg-gray-900 hover:bg-gray-800 text-white font-bold py-4 px-4 rounded-sm transition-colors mt-8 shadow-lg disabled:opacity-70 disabled:cursor-not-allowed"
+              className="w-full bg-gray-900 hover:bg-gray-800 text-white font-bold py-4 px-4 rounded-sm transition-colors mt-8 shadow-lg disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer flex justify-center items-center"
             >
-              {loading ? 'Processing...' : (isLogin ? 'Sign In' : 'Create Account')}
+              {loading ? (
+                <span>⏳ Processing...</span>
+              ) : (
+                <span>{isLogin ? 'Sign In' : 'Create Account'}</span>
+              )}
             </button>
           </form>
 
@@ -132,9 +146,9 @@ export default function WelcomePopup({ onClose }) {
                 setIsLogin(!isLogin);
                 setName(''); setMobile(''); setEmail(''); setPassword('');
               }} 
-              className="text-base font-bold text-red-600 hover:text-red-700 transition-colors"
+              className="text-base font-bold text-red-600 hover:text-red-700 transition-colors cursor-pointer"
             >
-              {isLogin ? 'Create an AutoElite Account' : 'Sign in to your account'}
+              {isLogin ? 'Create a Nandi Cars Account' : 'Sign in to your account'}
             </button>
           </div>
 

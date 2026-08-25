@@ -7,7 +7,7 @@ export default function About() {
       {/* Hero Section */}
       <div className="bg-gray-900 text-white py-20 px-4 text-center">
         <h1 className="text-4xl md:text-5xl font-extrabold uppercase tracking-tight mb-4">
-          About <span className="text-red-600">AutoElite</span>
+          About <span className="text-red-600">NANDI CARS</span>
         </h1>
         <p className="text-gray-400 max-w-2xl mx-auto text-lg">
           Redefining the self-drive car rental experience with premium vehicles, seamless booking, and unmatched customer service.
@@ -22,7 +22,7 @@ export default function About() {
               Our <span className="text-red-600">Mission</span>
             </h2>
             <p className="text-gray-600 leading-relaxed mb-4">
-              At AutoElite, we believe that the journey is just as important as the destination. Founded with a passion for automotive excellence, we provide a meticulously maintained fleet of self-drive cars that cater to all your travel needs—from luxury business trips to rugged weekend getaways.
+              At NANDI CARS, we believe that the journey is just as important as the destination. Founded with a passion for automotive excellence, we provide a meticulously maintained fleet of self-drive cars that cater to all your travel needs—from luxury business trips to rugged weekend getaways.
             </p>
             <p className="text-gray-600 leading-relaxed mb-6">
               Our platform is engineered to remove the friction from car rentals. With our streamlined booking process, transparent pricing, and instant confirmations, you can get behind the wheel of your dream car in minutes.

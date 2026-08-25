@@ -2,10 +2,19 @@ import { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext.jsx';
 import WelcomePopup from './WelcomePopup'; 
+import { 
+  FaUserCircle, 
+  FaCaretDown, 
+  FaSuitcase, 
+  FaQuestionCircle, 
+  FaCog, 
+  FaSignOutAlt 
+} from 'react-icons/fa';
 
 export default function Navbar() {
   const { user, logout } = useContext(AuthContext);
   const [showLoginPopup, setShowLoginPopup] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
     <>
@@ -16,43 +25,88 @@ export default function Navbar() {
             {/* Logo */}
             <div className="flex-shrink-0">
               <Link to="/" className="text-2xl font-bold uppercase tracking-widest">
-                <span className="text-red-500">Auto</span>Elite
+                <span className="text-red-500">Nandi</span> Cars
               </Link>
             </div>
 
-            {/* Center Navigation Links */}
-            <div className="hidden md:flex space-x-8">
-              <Link to="/" className="hover:text-red-500 transition-colors">Home</Link>
-              <Link to="/fleet" className="hover:text-red-500 transition-colors">Our Fleet</Link>
-              <Link to="/about" className="hover:text-red-500 transition-colors">About Us</Link>
-              <Link to="/contact" className="hover:text-red-500 transition-colors">Contact</Link>
+            {/* Center Navigation Links (About & Contact are back!) */}
+            <div className="hidden md:flex space-x-8 items-center">
+              <Link to="/" className="hover:text-red-500 transition-colors font-medium">Home</Link>
+              <Link to="/fleet" className="hover:text-red-500 transition-colors font-medium">Our Fleet</Link>
+              <Link to="/about" className="hover:text-red-500 transition-colors font-medium">About Us</Link>
+              <Link to="/contact" className="hover:text-red-500 transition-colors font-medium">Contact</Link>
             </div>
 
-            {/* NEW: Conditional Admin Link */}
+            {/* Right Side: Admin & User Section */}
+            <div className="flex items-center space-x-4">
+              
+              {/* Conditional Admin Link */}
               {user && user.isAdmin && (
-                <Link to="/admin/dashboard" className="bg-red-600/10 text-red-500 border border-red-500/30 px-3 py-1 rounded-sm text-sm font-bold hover:bg-red-600 hover:text-white transition-all">
+                <Link to="/admin/dashboard" className="bg-red-600/10 text-red-500 border border-red-500/30 px-3 py-1 rounded-sm text-sm font-bold hover:bg-red-600 hover:text-white transition-all mr-2">
                   Admin Panel
                 </Link>
               )}
 
-            {/* Dynamic Login / User Section */}
-            <div className="flex items-center space-x-4">
+              {/* Dynamic Login / User Dropdown Section */}
               {user ? (
-                <div className="flex items-center space-x-4">
-                  <span className="text-gray-300 text-sm md:text-base">
-                    Welcome, <span className="font-bold text-white">{user.name}</span>!
-                  </span>
+                <div className="relative">
+                  {/* Dropdown Trigger Button */}
                   <button 
-                    onClick={logout}
-                    className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-sm text-sm font-bold transition-colors"
+                    onClick={() => setIsMenuOpen(!isMenuOpen)}
+                    className="flex items-center space-x-2 text-gray-300 hover:text-white focus:outline-none transition-colors px-2 py-1"
                   >
-                    Logout
+                    <FaUserCircle className="text-2xl text-red-500" />
+                    <span className="font-bold hidden sm:block">{user.name}</span>
+                    <FaCaretDown className={`transition-transform duration-200 ${isMenuOpen ? 'rotate-180' : ''}`} />
                   </button>
+
+                  {/* Floating Dropdown Menu (Only User Actions Now) */}
+                  {isMenuOpen && (
+                    <div className="absolute right-0 mt-4 w-56 bg-white rounded-md shadow-xl py-2 z-50 border border-gray-200 text-gray-800">
+                      
+                      {/* User Header */}
+                      <div className="px-4 py-3 border-b border-gray-100">
+                        <p className="text-xs text-gray-500 uppercase tracking-wider">Signed in as</p>
+                        <p className="text-sm font-bold text-gray-900 truncate">{user.email || 'User'}</p>
+                      </div>
+                      
+                      {/* Personal Links */}
+                      <div className="py-1">
+                        <Link to="/my-bookings" onClick={() => setIsMenuOpen(false)} className="flex items-center px-4 py-2 text-sm hover:bg-red-50 hover:text-red-600 transition-colors">
+                          <FaSuitcase className="mr-3 text-gray-400" /> My Bookings
+                        </Link>
+                      </div>
+
+                      {/* Account Settings & Help */}
+                      <div className="py-1 border-t border-gray-100">
+                        <Link to="/help" onClick={() => setIsMenuOpen(false)} className="flex items-center px-4 py-2 text-sm hover:bg-red-50 hover:text-red-600 transition-colors">
+                          <FaQuestionCircle className="mr-3 text-gray-400" /> Help & Support
+                        </Link>
+                        <Link to="/settings" onClick={() => setIsMenuOpen(false)} className="flex items-center px-4 py-2 text-sm hover:bg-red-50 hover:text-red-600 transition-colors">
+                          <FaCog className="mr-3 text-gray-400" /> Account Settings
+                        </Link>
+                      </div>
+
+                      {/* Logout Button */}
+                      <div className="py-1 border-t border-gray-100">
+                        <button 
+                          onClick={() => {
+                            setIsMenuOpen(false);
+                            logout();
+                          }}
+                          className="flex w-full items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors font-bold"
+                        >
+                          <FaSignOutAlt className="mr-3" /> Logout
+                        </button>
+                      </div>
+
+                    </div>
+                  )}
                 </div>
               ) : (
                 <button 
                   onClick={() => setShowLoginPopup(true)} 
-                  className="bg-white text-gray-900 hover:bg-gray-200 px-6 py-2 rounded-sm text-sm font-bold transition-colors"
+                  className="bg-red-600 text-white hover:bg-red-700 px-6 py-2 rounded-sm text-sm font-bold transition-colors shadow-md"
                 >
                   Login / Sign Up
                 </button>

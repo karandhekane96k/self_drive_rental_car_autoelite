@@ -4,22 +4,24 @@ import toast from 'react-hot-toast';
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
+  // Use sessionStorage instead of localStorage so sessions expire when the browser tab closes
   const [user, setUser] = useState(() => {
-    const savedUser = localStorage.getItem('user');
+    const savedUser = sessionStorage.getItem('user');
     return savedUser ? JSON.parse(savedUser) : null;
   });
 
   useEffect(() => {
     if (user) {
-      localStorage.setItem('user', JSON.stringify(user));
+      sessionStorage.setItem('user', JSON.stringify(user));
     } else {
-      localStorage.removeItem('user');
+      sessionStorage.removeItem('user');
     }
   }, [user]);
 
   // Premium logout action
   const logout = () => {
     setUser(null);
+    sessionStorage.removeItem('user');
     toast.success("Successfully logged out!");
   };
 

@@ -75,8 +75,8 @@ export default function Contact() {
                   <FaEnvelope className="text-red-500 text-xl mr-4 mt-1" />
                   <div>
                     <h3 className="font-bold uppercase text-sm">Email</h3>
-                    <a href="mailto:support@autoelite.com" className="text-gray-300 hover:text-white text-sm mt-1 block transition-colors underline">
-                      support@autoelite.com
+                    <a href="mailto:nandiselfcars@gmail.com" className="text-gray-300 hover:text-white text-sm mt-1 block transition-colors underline">
+                      nandiselfcars@gmail.com
                     </a>
                   </div>
                 </div>

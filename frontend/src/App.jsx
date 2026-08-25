@@ -41,6 +41,7 @@ export default function App() {
           <Route path="/cars/:id" element={<CarDetails />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/my-bookings" element={<MyBookings />} />
           
           {/* Protected User Routes */}
           <Route path="/my-bookings" element={
