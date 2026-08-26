@@ -10,7 +10,7 @@ export default function AdminDashboard() {
 
   // Fetch current QR code on load
   useEffect(() => {
-    fetch('https://self-drive-rental-car-Nandi Cars.onrender.com/api/settings')
+    fetch('https://self-drive-rental-car-autoelite.onrender.com/api/settings')
       .then(res => res.json())
       .then(data => setCurrentQr(data.qrCodeUrl))
       .catch(err => console.error(err));
@@ -25,7 +25,7 @@ export default function AdminDashboard() {
       const formData = new FormData();
       formData.append('image', qrFile);
 
-      const uploadRes = await fetch('https://self-drive-rental-car-Nandi Cars.onrender.com/api/upload', {
+      const uploadRes = await fetch('https://self-drive-rental-car-autoelite.onrender.com/api/upload', {
         method: 'POST',
         body: formData,
       });
@@ -33,10 +33,10 @@ export default function AdminDashboard() {
       
       let imageUrl = uploadData.image || uploadData.imageUrl || uploadData.url;
       if (uploadRes.ok && imageUrl) {
-        imageUrl = imageUrl.startsWith('http') ? imageUrl : `https://self-drive-rental-car-Nandi Cars.onrender.com${imageUrl}`;
+        imageUrl = imageUrl.startsWith('http') ? imageUrl : `https://self-drive-rental-car-autoelite.onrender.com${imageUrl}`;
         
         // 2. Save image URL to Settings Database
-        const settingsRes = await fetch('https://self-drive-rental-car-Nandi Cars.onrender.com/api/settings', {
+        const settingsRes = await fetch('https://self-drive-rental-car-autoelite.onrender.com/api/settings', {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ qrCodeUrl: imageUrl })

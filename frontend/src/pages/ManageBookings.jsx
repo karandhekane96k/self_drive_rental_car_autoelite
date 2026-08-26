@@ -12,7 +12,7 @@ export default function ManageBookings() {
 
   const fetchBookings = async () => {
     try {
-      const response = await fetch('https://self-drive-rental-car-Nandi Cars.onrender.com/api/bookings');
+      const response = await fetch('https://self-drive-rental-car-autoelite.onrender.com/api/bookings');
       const data = await response.json();
       setBookings(data);
       setLoading(false);
@@ -27,7 +27,7 @@ export default function ManageBookings() {
     const newStatus = currentStatus === 'Pending Verification' ? 'Verified' : 'Rejected';
 
     try {
-      const response = await fetch(`https://self-drive-rental-car-Nandi Cars.onrender.com/api/bookings/${id}/payment`, {
+      const response = await fetch(`https://self-drive-rental-car-autoelite.onrender.com/api/bookings/${id}/payment`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ paymentStatus: newStatus })

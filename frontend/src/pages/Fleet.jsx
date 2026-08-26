@@ -20,7 +20,7 @@ export default function Fleet() {
   useEffect(() => {
     const fetchCars = async () => {
       try {
-        const response = await fetch('https://self-drive-rental-car-Nandi Cars.onrender.com/api/cars');
+        const response = await fetch('https://self-drive-rental-car-autoelite.onrender.com/api/cars');
         const data = await response.json();
         setCars(data);
         setLoading(false);

@@ -34,7 +34,7 @@ export default function AdminAddCar() {
       const imageFormData = new FormData();
       imageFormData.append('image', imageFile);
 
-      const uploadResponse = await fetch('https://self-drive-rental-car-Nandi Cars.onrender.com/api/upload', {
+      const uploadResponse = await fetch('https://self-drive-rental-car-autoelite.onrender.com/api/upload', {
         method: 'POST',
         body: imageFormData, 
       });
@@ -48,7 +48,7 @@ export default function AdminAddCar() {
       // PHASE 2: Save the car details AND the new image URL to the database
       const carPayload = { ...carData, image: finalImageUrl };
 
-      const carResponse = await fetch('https://self-drive-rental-car-Nandi Cars.onrender.com/api/cars', {
+      const carResponse = await fetch('https://self-drive-rental-car-autoelite.onrender.com/api/cars', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(carPayload),
