@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from 'react';
 import toast from 'react-hot-toast';
 import { 
-  FaTimes, FaCalendarAlt, FaUser, FaPhone, FaCreditCard, 
+  FaTimes, FaCalendarAlt, FaUser, FaPhone,  
   FaShieldAlt, FaFileAlt, FaQrcode, FaArrowLeft, FaCheckCircle, FaExternalLinkAlt 
 } from 'react-icons/fa';
 import { AuthContext } from '../context/AuthContext';
@@ -182,13 +182,10 @@ export default function BookingModal({ car, isOpen, onClose }) {
         const encodedMessage = encodeURIComponent(messageText);
         const whatsappUrl = `https://wa.me/${adminWhatsAppNumber}?text=${encodedMessage}`;
 
-        // THE FIX: Use window.location.href to safely redirect without popup blockers!
         setTimeout(() => {
           window.location.href = whatsappUrl;
         }, 1500);
-        // ----------------------------------------------
 
-        // Close the modal while the redirect happens
         onClose();
       } else {
         toast.error(data.message || 'Failed to process booking.', { id: toastId });
@@ -201,115 +198,164 @@ export default function BookingModal({ car, isOpen, onClose }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-sm p-4">
-      <div className="bg-white rounded-lg shadow-2xl w-full max-w-xl relative overflow-hidden flex flex-col max-h-[95vh]">
+    <div 
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 overflow-y-auto"
+      onClick={onClose}
+    >
+      <div 
+        className="bg-white rounded-2xl shadow-2xl w-full max-w-xl relative overflow-hidden flex flex-col max-h-[90vh] border border-gray-100"
+        onClick={(e) => e.stopPropagation()}
+      >
         
+        {/* THE GRID BACKGROUND PATTERN */}
+        <div 
+          className="absolute inset-0 w-full h-full pointer-events-none z-0 opacity-40" 
+          style={{ 
+            backgroundImage: 'linear-gradient(rgba(0, 0, 0, 0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 0, 0, 0.04) 1px, transparent 1px)', 
+            backgroundSize: '40px 40px' 
+          }}
+        ></div>
+
         {/* Header */}
-        <div className="bg-gray-900 p-6 flex justify-between items-center shrink-0">
-          <div>
-            <h2 className="text-xl md:text-2xl font-bold uppercase tracking-tight text-white mb-1 flex items-center">
+        <div className="bg-gray-900 p-6 flex justify-between items-center shrink-0 relative z-10 overflow-hidden">
+          <div className="absolute -bottom-12 -right-12 w-32 h-32 bg-red-600 rounded-full mix-blend-multiply filter blur-2xl opacity-30"></div>
+          
+          <div className="relative z-10">
+            <div className="flex items-center gap-2 mb-1">
               {step === 2 && (
-                <button onClick={() => setStep(1)} className="mr-3 text-gray-400 hover:text-white transition-colors cursor-pointer">
-                  <FaArrowLeft size={18} />
+                <button onClick={() => setStep(1)} className="text-gray-400 hover:text-white transition-colors cursor-pointer mr-1">
+                  <FaArrowLeft size={16} />
                 </button>
               )}
-              Reserve <span className="text-red-500 ml-2">{car.brand} {car.name}</span>
+              <span className="bg-red-600/20 text-red-500 border border-red-500/30 text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full tracking-wider">
+                {step === 1 ? 'Step 1 of 2' : 'Step 2 of 2'}
+              </span>
+            </div>
+            <h2 className="text-xl md:text-2xl font-black uppercase tracking-tight text-white truncate">
+              {car.brand} {car.name}
             </h2>
-            <p className="text-xs text-gray-400 font-medium tracking-widest uppercase">
-              {step === 1 ? 'Step 1: Details & Agreement' : 'Step 2: Token Verification'}
-            </p>
           </div>
-          <button onClick={onClose} className="text-gray-400 hover:text-white bg-gray-800 p-2 rounded-full cursor-pointer transition-colors">
-            <FaTimes />
+
+          <button onClick={onClose} className="text-gray-400 hover:text-red-500 bg-gray-800/80 hover:bg-gray-800 p-2.5 rounded-full cursor-pointer transition-colors relative z-10 shadow-sm">
+            <FaTimes size={14} />
           </button>
         </div>
 
         {/* Scrollable Content Area */}
-        <div className="p-6 overflow-y-auto flex-grow">
+        <div className="p-6 md:p-8 overflow-y-auto flex-grow relative z-10">
           
           {/* ================= STEP 1: BOOKING FORM ================= */}
           {step === 1 && (
-            <form onSubmit={handleProceedToPayment} className="space-y-4">
+            <form onSubmit={handleProceedToPayment} className="space-y-5">
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
+                  <label className="block text-[10px] font-bold uppercase text-gray-500 mb-1 tracking-wider">Full Name</label>
                   <div className="relative">
-                    <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
-                      <FaUser size={14} />
+                    <span className="absolute inset-y-0 left-0 flex items-center pl-3.5 text-gray-400">
+                      <FaUser size={13} />
                     </span>
                     <input 
                       type="text" required value={customerName} onChange={(e) => setCustomerName(e.target.value)} 
-                      placeholder="Full Name (As per Aadhar/DL)" 
-                      className="w-full border border-gray-300 pl-10 pr-3 py-3 rounded-sm focus:ring-red-500 focus:border-red-500 text-sm"
+                      placeholder="As per official ID" 
+                      className="w-full bg-white/80 backdrop-blur-sm border border-gray-200 pl-10 pr-3 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 text-xs transition-all font-medium"
                     />
                   </div>
                 </div>
 
                 <div>
+                  <label className="block text-[10px] font-bold uppercase text-gray-500 mb-1 tracking-wider">Mobile Number</label>
                   <div className="relative">
-                    <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
-                      <FaPhone size={14} />
+                    <span className="absolute inset-y-0 left-0 flex items-center pl-3.5 text-gray-400">
+                      <FaPhone size={13} />
                     </span>
                     <input 
                       type="tel" maxLength="10" required value={customerPhone} onChange={(e) => setCustomerPhone(e.target.value.replace(/\D/g, ''))}
-                      placeholder="10-Digit Mobile Number" 
-                      className="w-full border border-gray-300 pl-10 pr-3 py-3 rounded-sm focus:ring-red-500 focus:border-red-500 text-sm"
+                      placeholder="10-digit mobile no." 
+                      className="w-full bg-white/80 backdrop-blur-sm border border-gray-200 pl-10 pr-3 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 text-xs transition-all font-medium"
                     />
                   </div>
                 </div>
               </div>
 
               {/* Start & End Dates */}
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-[11px] font-bold uppercase text-gray-500 mb-1"><FaCalendarAlt className="inline mr-1"/> Start Date</label>
-                  <input type="date" required value={startDate} onChange={(e) => setStartDate(e.target.value)} className="w-full border border-gray-300 p-2.5 rounded-sm text-sm" />
+                  <label className="block text-[10px] font-bold uppercase text-gray-500 mb-1 tracking-wider flex items-center gap-1">
+                    <FaCalendarAlt className="text-red-500 text-[10px]" /> Start Date
+                  </label>
+                  <input 
+                    type="date" required value={startDate} onChange={(e) => setStartDate(e.target.value)} 
+                    className="w-full bg-white/80 backdrop-blur-sm border border-gray-200 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 text-xs transition-all text-gray-700 font-medium" 
+                  />
                 </div>
                 <div>
-                  <label className="block text-[11px] font-bold uppercase text-gray-500 mb-1"><FaCalendarAlt className="inline mr-1"/> End Date</label>
-                  <input type="date" required value={endDate} onChange={(e) => setEndDate(e.target.value)} className="w-full border border-gray-300 p-2.5 rounded-sm text-sm" />
+                  <label className="block text-[10px] font-bold uppercase text-gray-500 mb-1 tracking-wider flex items-center gap-1">
+                    <FaCalendarAlt className="text-red-500 text-[10px]" /> End Date
+                  </label>
+                  <input 
+                    type="date" required value={endDate} onChange={(e) => setEndDate(e.target.value)} 
+                    className="w-full bg-white/80 backdrop-blur-sm border border-gray-200 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 text-xs transition-all text-gray-700 font-medium" 
+                  />
                 </div>
               </div>
 
               {/* Security Deposit Method */}
               <div>
-                <label className="block text-xs font-bold uppercase text-gray-700 mb-1">
-                  <FaFileAlt className="inline mr-1 text-red-600"/> Security Deposit Method (Required at Pickup)
+                <label className="block text-[10px] font-bold uppercase text-gray-500 mb-1 tracking-wider flex items-center gap-1">
+                  <FaFileAlt className="text-red-500 text-[10px]" /> Security Deposit Method (Required at Pickup)
                 </label>
-                <select value={depositType} onChange={(e) => setDepositType(e.target.value)} className="w-full border border-gray-300 p-3 rounded-sm text-sm font-semibold bg-white cursor-pointer">
+                <select 
+                  value={depositType} onChange={(e) => setDepositType(e.target.value)} 
+                  className="w-full bg-white/80 backdrop-blur-sm border border-gray-200 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 text-xs font-semibold text-gray-700 transition-all cursor-pointer"
+                >
                   <option value="bike">Customer 2-Wheeler (Original RC Required)</option>
                   <option value="cash">₹5,000 Cash + Local Address Proof (Light Bill & Rent Agreement)</option>
                 </select>
               </div>
 
               {/* Security & Checkbox with Terms Popup Link */}
-              <div className="bg-gray-50 border border-gray-200 p-4 rounded-sm space-y-4">
-                <div className="flex items-center justify-between">
-                  <label className="text-xs font-bold uppercase text-gray-700"><FaShieldAlt className="inline mr-1 text-green-600"/> Security Verification:</label>
-                  <div className="flex items-center space-x-2">
-                    <span className="bg-white text-gray-900 font-bold px-3 py-1.5 border border-gray-300 rounded-sm text-xs tracking-wider shadow-sm">{captcha.num1} + {captcha.num2} = ?</span>
-                    <input type="text" maxLength="2" required value={captchaInput} onChange={(e) => setCaptchaInput(e.target.value.replace(/\D/g, ''))} placeholder="Ans" className="w-16 border border-gray-300 p-2 rounded-sm text-xs text-center font-bold bg-white" />
+              <div className="bg-gray-50/90 border border-gray-200 p-4 rounded-xl space-y-4">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                  <label className="text-[11px] font-bold uppercase text-gray-700 flex items-center gap-1.5">
+                    <FaShieldAlt className="text-green-600" /> Security Verification:
+                  </label>
+                  <div className="flex items-center space-x-2 w-full sm:w-auto justify-between sm:justify-start">
+                    <span className="bg-white text-gray-900 font-bold px-3 py-2 border border-gray-200 rounded-lg text-xs tracking-wider shadow-xs">
+                      {captcha.num1} + {captcha.num2} = ?
+                    </span>
+                    <input 
+                      type="text" maxLength="2" required value={captchaInput} onChange={(e) => setCaptchaInput(e.target.value.replace(/\D/g, ''))} 
+                      placeholder="Ans" 
+                      className="w-20 bg-white border border-gray-300 py-2 px-3 rounded-lg text-center text-xs font-bold focus:outline-none focus:border-red-600 shadow-xs" 
+                    />
                   </div>
                 </div>
 
-                <div className="flex items-start pt-2 border-t border-gray-200">
-                  <input id="terms" type="checkbox" checked={termsAccepted} onChange={(e) => setTermsAccepted(e.target.checked)} className="w-4 h-4 text-red-600 bg-white border-gray-300 rounded cursor-pointer mt-0.5" required />
-                  <label htmlFor="terms" className="ml-2 text-xs font-medium text-gray-700 leading-relaxed">
+                <div className="flex items-start pt-3 border-t border-gray-200">
+                  <input 
+                    id="terms" type="checkbox" checked={termsAccepted} onChange={(e) => setTermsAccepted(e.target.checked)} 
+                    className="w-4 h-4 text-red-600 bg-white border-gray-300 rounded cursor-pointer mt-0.5 accent-red-600 shrink-0" required 
+                  />
+                  <label htmlFor="terms" className="ml-2.5 text-[11px] font-medium text-gray-600 leading-relaxed">
                     I agree to the{' '}
                     <button 
                       type="button" 
                       onClick={() => setShowTermsModal(true)} 
                       className="text-red-600 font-bold underline hover:text-red-700 cursor-pointer inline-flex items-center"
                     >
-                      Terms & Conditions <FaExternalLinkAlt className="ml-1 text-[10px]" />
+                      Terms & Conditions <FaExternalLinkAlt className="ml-1 text-[9px]" />
                     </button>
                     , confirm my name matches my official documents, and understand the ₹500 token is non-refundable.
                   </label>
                 </div>
               </div>
 
-              <button type="submit" className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3.5 rounded-sm uppercase tracking-widest transition-colors shadow-lg cursor-pointer flex justify-center items-center">
-                Proceed to Payment <FaArrowLeft className="ml-2 rotate-180" />
+              <button 
+                type="submit" 
+                className="w-full bg-gray-900 hover:bg-red-600 text-white font-extrabold py-3.5 rounded-lg uppercase tracking-widest text-xs transition-colors duration-300 shadow-md cursor-pointer flex justify-center items-center mt-2"
+              >
+                Proceed to Payment <FaArrowLeft className="ml-2 rotate-180 text-[10px]" />
               </button>
             </form>
           )}
@@ -319,35 +365,35 @@ export default function BookingModal({ car, isOpen, onClose }) {
             <form onSubmit={handleFinalSubmit} className="space-y-6">
               
               <div className="text-center">
-                <h3 className="text-xl font-extrabold text-gray-900 uppercase">Secure Your Booking</h3>
-                <p className="text-gray-500 text-sm mt-1">Pay the token amount to lock in your reservation.</p>
+                <h3 className="text-xl font-black text-gray-900 uppercase tracking-tight">Secure Your Booking</h3>
+                <p className="text-gray-500 text-xs mt-1">Pay the token amount via UPI to lock in your reservation.</p>
               </div>
 
-              <div className="bg-red-50 border border-red-200 p-4 rounded-sm flex justify-between items-center">
+              <div className="bg-red-50/80 border border-red-100 p-4 rounded-xl flex justify-between items-center">
                 <div>
-                  <p className="text-xs text-red-600 font-bold uppercase">Token Amount</p>
-                  <p className="text-sm font-semibold text-gray-900">Non-Refundable</p>
+                  <p className="text-[10px] text-red-600 font-extrabold uppercase tracking-widest">Token Amount</p>
+                  <p className="text-xs font-semibold text-gray-600">Non-Refundable Advance</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-3xl font-extrabold text-red-600">₹500</p>
+                  <p className="text-3xl font-black text-red-600">₹500</p>
                 </div>
               </div>
 
               {/* QR Code Container */}
-              <div className="flex flex-col items-center bg-gray-50 border border-gray-200 p-6 rounded-sm">
+              <div className="flex flex-col items-center bg-gray-50/80 border border-gray-200 p-6 rounded-xl">
                 {globalQrCode ? (
-                  <img src={globalQrCode} alt="UPI QR Code" className="w-40 h-40 object-contain mb-4 border-2 border-gray-200 shadow-sm rounded-sm bg-white p-2" />
+                  <img src={globalQrCode} alt="UPI QR Code" className="w-40 h-40 object-contain mb-4 border border-gray-200 shadow-sm rounded-lg bg-white p-2" />
                 ) : (
                   <FaQrcode className="text-gray-300 mb-4" size={100} />
                 )}
-                <p className="text-sm font-bold text-gray-800 uppercase tracking-widest">Scan to Pay</p>
-                <p className="text-xs text-gray-500 mt-1">Accepts PhonePe, GPay, Paytm, and all UPI apps.</p>
+                <p className="text-xs font-extrabold text-gray-800 uppercase tracking-widest">Scan to Pay via UPI</p>
+                <p className="text-[11px] text-gray-500 mt-1">Accepts PhonePe, GPay, Paytm, and all UPI applications.</p>
               </div>
 
               {/* UTR Input */}
               <div>
-                <label className="block text-xs font-bold uppercase text-gray-700 mb-1">
-                  <FaCheckCircle className="inline mr-1 text-green-600"/> Enter 12-Digit UTR / Ref Number
+                <label className="block text-[10px] font-bold uppercase text-gray-700 mb-1.5 tracking-wider">
+                  <FaCheckCircle className="inline mr-1 text-green-600"/> Enter 12-Digit UTR / Reference Number
                 </label>
                 <input 
                   type="text" 
@@ -356,16 +402,16 @@ export default function BookingModal({ car, isOpen, onClose }) {
                   value={utrNumber} 
                   onChange={(e) => setUtrNumber(e.target.value.replace(/\D/g, ''))}
                   placeholder="e.g. 312345678901" 
-                  className="w-full border-2 border-gray-300 p-3.5 rounded-sm focus:ring-green-500 focus:border-green-500 text-center font-bold tracking-widest text-lg"
+                  className="w-full bg-white border-2 border-gray-300 p-3.5 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500/20 focus:border-green-600 text-center font-bold tracking-widest text-lg transition-all text-gray-800"
                 />
-                <p className="text-[10px] text-gray-500 mt-1 text-center">Found in your UPI app payment history details.</p>
+                <p className="text-[10px] text-gray-400 mt-1.5 text-center">Found in your UPI app payment history transaction details.</p>
               </div>
 
               {/* SUBMIT BUTTON WITH LOADING STATE */}
               <button 
                 type="submit" 
                 disabled={submitting}
-                className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3.5 rounded-sm uppercase tracking-widest transition-colors shadow-lg disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer flex justify-center items-center"
+                className="w-full bg-green-600 hover:bg-green-700 text-white font-extrabold py-3.5 rounded-lg uppercase tracking-widest text-xs transition-colors shadow-md disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer flex justify-center items-center"
               >
                 {submitting ? (
                   <span>⏳ Confirming Booking with Server...</span>
@@ -381,18 +427,18 @@ export default function BookingModal({ car, isOpen, onClose }) {
 
       {/* ================= TERMS & CONDITIONS POPUP MODAL ================= */}
       {showTermsModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-          <div className="bg-white rounded-lg shadow-2xl w-full max-w-lg overflow-hidden flex flex-col max-h-[85vh] animate-fadeIn">
+        <div className="fixed inset-0 z-[130] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden flex flex-col max-h-[85vh] border border-gray-100">
             
             <div className="bg-gray-900 p-4 flex justify-between items-center text-white">
-              <h3 className="font-bold uppercase tracking-wider text-sm">Rental Terms & Conditions</h3>
+              <h3 className="font-extrabold uppercase tracking-wider text-xs">Rental Terms & Conditions</h3>
               <button onClick={() => setShowTermsModal(false)} className="text-gray-400 hover:text-white bg-gray-800 p-1.5 rounded-full cursor-pointer">
-                <FaTimes size={14} />
+                <FaTimes size={12} />
               </button>
             </div>
 
-            <div className="p-6 overflow-y-auto text-xs text-gray-700 space-y-4 leading-relaxed">
-              <div className="bg-red-50 border-l-4 border-red-600 p-3 text-red-800 font-bold">
+            <div className="p-6 overflow-y-auto text-xs text-gray-600 space-y-4 leading-relaxed">
+              <div className="bg-red-50 border-l-4 border-red-600 p-3 text-red-800 font-bold rounded-r-lg">
                 IDENTITY POLICY: Booking name MUST match original Aadhar & DL. Delivery strictly given ONLY to the named person.
               </div>
               
@@ -420,13 +466,13 @@ export default function BookingModal({ car, isOpen, onClose }) {
               </ul>
             </div>
 
-            <div className="bg-gray-100 p-3 text-right border-t border-gray-200">
+            <div className="bg-gray-50 p-4 text-right border-t border-gray-100">
               <button 
                 onClick={() => {
                   setTermsAccepted(true);
                   setShowTermsModal(false);
                 }}
-                className="bg-red-600 hover:bg-red-700 text-white text-xs font-bold uppercase px-5 py-2 rounded-sm cursor-pointer transition-colors"
+                className="bg-gray-900 hover:bg-red-600 text-white text-xs font-extrabold uppercase px-6 py-2.5 rounded-lg cursor-pointer transition-colors shadow-sm tracking-wider"
               >
                 Accept & Close
               </button>

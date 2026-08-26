@@ -1,24 +1,32 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination, Autoplay } from 'swiper/modules';
+import { Navigation, Pagination, Autoplay, EffectFade } from 'swiper/modules';
 import { FaCar, FaUserTie, FaHeadset } from 'react-icons/fa';
 import CarCard from '../components/CarCard';
+import BookingModal from '../components/BookingModal';
+import { AuthContext } from '../context/AuthContext';
 
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
+import 'swiper/css/effect-fade';
 
 export default function Home() {
   const [dbCars, setDbCars] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  // Global Modal State
+  const [selectedCar, setSelectedCar] = useState(null);
+  const [isBookingOpen, setIsBookingOpen] = useState(false);
+  const { user } = useContext(AuthContext);
 
   useEffect(() => {
     const fetchCars = async () => {
       try {
         const response = await fetch('https://self-drive-rental-car-autoelite.onrender.com/api/cars');
         const data = await response.json();
-        setDbCars(data.slice(0, 4)); 
+        setDbCars(data.slice(0, 3)); 
         setLoading(false);
       } catch (error) {
         console.error('Failed to fetch cars', error);
@@ -28,10 +36,18 @@ export default function Home() {
     fetchCars();
   }, []);
 
+  const handleOpenBooking = (car) => {
+    if (!user) {
+      toast.error('Please log in to reserve a vehicle.');
+      return;
+    }
+    setSelectedCar(car);
+    setIsBookingOpen(true);
+  };
+
   const slides = [
     {
       id: 1,
-      // FIXED: Brand new, reliable luxury car image for the first slide!
       image: "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?q=80&w=2066&auto=format&fit=crop", 
       title: "Drive in Luxury",
       subtitle: "Unleash the power of luxury on every journey."
@@ -74,25 +90,46 @@ export default function Home() {
   return (
     <div className="flex flex-col min-h-screen bg-white">
       
+      {/* Custom Styles for the Cinematic Ken Burns Slow Zoom Effect */}
+      <style>{`
+        @keyframes slowZoom {
+          0% {
+            transform: scale(1);
+          }
+          100% {
+            transform: scale(1.12);
+          }
+        }
+        .swiper-slide-active .hero-bg-zoom {
+          animation: slowZoom 6s ease-out forwards;
+        }
+      `}</style>
+
       {/* Hero Slider Section */}
-      <div className="w-full h-screen relative bg-gray-900">
+      <div className="w-full h-screen relative bg-gray-900 overflow-hidden">
         <Swiper
-          modules={[Navigation, Pagination, Autoplay]}
+          modules={[Navigation, Pagination, Autoplay, EffectFade]}
+          effect={'fade'}
+          fadeEffect={{ crossFade: true }}
           navigation={true}
           pagination={{ clickable: true }}
-          autoplay={{ delay: 4000, disableOnInteraction: false }}
+          autoplay={{ delay: 5000, disableOnInteraction: false }}
           loop={true}
           className="w-full h-full"
         >
           {slides.map((slide) => (
             <SwiperSlide key={slide.id}>
-              <div 
-                className="w-full h-full bg-cover bg-center flex items-center justify-center relative"
-                style={{ backgroundImage: `url(${slide.image})` }}
-              >
-                <div className="absolute inset-0 bg-black/40"></div>
+              <div className="w-full h-full relative overflow-hidden flex items-center justify-center">
+                {/* Background Image with Slow Zoom Animation Class */}
+                <div 
+                  className="absolute inset-0 bg-cover bg-center hero-bg-zoom"
+                  style={{ backgroundImage: `url(${slide.image})` }}
+                ></div>
+                
+                <div className="absolute inset-0 bg-black/50"></div>
+                
                 <div className="relative z-10 text-center px-4 mt-20 md:mt-0">
-                  <h1 className="text-5xl md:text-7xl font-extrabold uppercase tracking-tight text-white mb-4 drop-shadow-lg">
+                  <h1 className="text-4xl md:text-7xl font-extrabold uppercase tracking-tight text-white mb-4 drop-shadow-lg">
                     {slide.title}
                   </h1>
                   <p className="max-w-2xl mx-auto text-lg md:text-xl text-gray-200 mb-8 leading-relaxed drop-shadow-md">
@@ -109,8 +146,17 @@ export default function Home() {
       </div>
 
       {/* Dynamic Database Cars Section */}
-      <div className="py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="relative py-24 bg-white overflow-hidden">
+        
+        <div 
+          className="absolute inset-0 w-full h-full pointer-events-none z-0 opacity-50" 
+          style={{ 
+            backgroundImage: 'linear-gradient(rgba(0, 0, 0, 0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 0, 0, 0.04) 1px, transparent 1px)', 
+            backgroundSize: '40px 40px' 
+          }}
+        ></div>
+
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold uppercase tracking-widest text-gray-900 mb-4">
               Featured <span className="text-red-600">Vehicles</span>
@@ -121,10 +167,10 @@ export default function Home() {
           {loading ? (
             <div className="text-center font-bold text-xl">Loading featured vehicles...</div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {dbCars.length > 0 ? (
                 dbCars.map((car) => (
-                  <CarCard key={car._id} car={car} />
+                  <CarCard key={car._id} car={car} onBookClick={handleOpenBooking} />
                 ))
               ) : (
                 <div className="col-span-1 md:col-span-2 lg:col-span-4 text-center text-gray-500 italic">
@@ -134,7 +180,6 @@ export default function Home() {
             </div>
           )}
 
-          {/* Explore Entire Fleet Button */}
           <div className="text-center mt-16">
             <Link to="/fleet" className="inline-block bg-gray-900 hover:bg-gray-800 text-white font-bold py-4 px-12 rounded-sm uppercase tracking-widest transition-colors shadow-lg">
               Explore Entire Fleet
@@ -166,6 +211,15 @@ export default function Home() {
 
         </div>
       </div>
+
+      {/* GLOBAL BOOKING MODAL (Renders safely at the root layer) */}
+      {selectedCar && (
+        <BookingModal 
+          car={selectedCar} 
+          isOpen={isBookingOpen} 
+          onClose={() => setIsBookingOpen(false)} 
+        />
+      )}
 
     </div>
   );
