@@ -9,7 +9,7 @@ export default function Footer() {
           {/* Brand Section */}
           <div>
             <h2 className="text-2xl font-bold uppercase tracking-widest mb-4">
-              <span className="text-red-500">Auto</span>Elite
+              <span className="text-red-500">Nandi</span> Cars
             </h2>
             <p className="text-gray-400 text-sm leading-relaxed">
               Premium car services and luxury rentals. Experience perfection on every journey with our top-tier fleet and dedicated customer support.
@@ -21,8 +21,6 @@ export default function Footer() {
             <h3 className="text-lg font-semibold mb-4 text-gray-200">Quick Links</h3>
             <ul className="space-y-2 text-sm text-gray-400">
               <li><Link to="/about" className="hover:text-red-500 transition-colors">About Us</Link></li>
-              <li><Link to="/services" className="hover:text-red-500 transition-colors">Our Services</Link></li>
-              <li><Link to="/gallery" className="hover:text-red-500 transition-colors">Gallery</Link></li>
               <li><Link to="/contact" className="hover:text-red-500 transition-colors">Contact Us</Link></li>
             </ul>
           </div>
@@ -31,9 +29,9 @@ export default function Footer() {
           <div>
             <h3 className="text-lg font-semibold mb-4 text-gray-200">Contact Us</h3>
             <ul className="space-y-2 text-sm text-gray-400">
-              <li>Email: support@autoelite.com</li>
-              <li>Phone: +1 (555) 123-4567</li>
-              <li>Address: 123 Luxury Lane, Auto City</li>
+              <li>Email: nandiselfcars@gmail.com</li>
+              <li>Phone: +91 8625881282</li>
+              <li>Address: Wakad, PCMC Pune, Maharashtra</li>
             </ul>
           </div>
 
@@ -41,7 +39,7 @@ export default function Footer() {
 
         {/* Copyright */}
         <div className="border-t border-gray-800 mt-10 pt-6 text-center text-sm text-gray-500">
-          &copy; {new Date().getFullYear()} AutoElite. All rights reserved.
+          &copy; {new Date().getFullYear()} Nandi Cars. All rights reserved.
         </div>
       </div>
     </footer>

@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext.jsx';
 import WelcomePopup from './WelcomePopup'; 
@@ -15,10 +15,31 @@ export default function Navbar() {
   const { user, logout } = useContext(AuthContext);
   const [showLoginPopup, setShowLoginPopup] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  
+  // 1. Create a reference for the dropdown container
+  const dropdownRef = useRef(null);
+
+  // 2. Add the "Click Outside" listener
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      // If menu is open and click is outside the dropdown reference, close it
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    // Attach the listener
+    document.addEventListener('mousedown', handleClickOutside);
+    
+    // Clean up listener when component closes
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   return (
     <>
-      <nav className="bg-gray-900 text-white shadow-lg sticky top-0 z-50">
+      <nav className="bg-gray-900 md:bg-transparent text-white absolute w-full top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-20">
             
@@ -29,7 +50,7 @@ export default function Navbar() {
               </Link>
             </div>
 
-            {/* Center Navigation Links (About & Contact are back!) */}
+            {/* Center Navigation Links */}
             <div className="hidden md:flex space-x-8 items-center">
               <Link to="/" className="hover:text-red-500 transition-colors font-medium">Home</Link>
               <Link to="/fleet" className="hover:text-red-500 transition-colors font-medium">Our Fleet</Link>
@@ -40,16 +61,18 @@ export default function Navbar() {
             {/* Right Side: Admin & User Section */}
             <div className="flex items-center space-x-4">
               
-              {/* Conditional Admin Link */}
+              {/* Conditional Admin Link (Hidden on mobile via 'hidden md:block') */}
               {user && user.isAdmin && (
-                <Link to="/admin/dashboard" className="bg-red-600/10 text-red-500 border border-red-500/30 px-3 py-1 rounded-sm text-sm font-bold hover:bg-red-600 hover:text-white transition-all mr-2">
+                <Link to="/admin/dashboard" className="hidden md:block bg-red-600/10 text-red-500 border border-red-500/30 px-3 py-1 rounded-sm text-sm font-bold hover:bg-red-600 hover:text-white transition-all mr-2">
                   Admin Panel
                 </Link>
               )}
 
               {/* Dynamic Login / User Dropdown Section */}
               {user ? (
-                <div className="relative">
+                // Attach the ref right here to the wrapping div
+                <div className="relative" ref={dropdownRef}>
+                  
                   {/* Dropdown Trigger Button */}
                   <button 
                     onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -60,7 +83,7 @@ export default function Navbar() {
                     <FaCaretDown className={`transition-transform duration-200 ${isMenuOpen ? 'rotate-180' : ''}`} />
                   </button>
 
-                  {/* Floating Dropdown Menu (Only User Actions Now) */}
+                  {/* Floating Dropdown Menu */}
                   {isMenuOpen && (
                     <div className="absolute right-0 mt-4 w-56 bg-white rounded-md shadow-xl py-2 z-50 border border-gray-200 text-gray-800">
                       
@@ -70,6 +93,15 @@ export default function Navbar() {
                         <p className="text-sm font-bold text-gray-900 truncate">{user.email || 'User'}</p>
                       </div>
                       
+                      {/* Mobile Admin Link (Only shows on mobile via 'md:hidden') */}
+                      {user.isAdmin && (
+                        <div className="py-1 border-b border-gray-100 md:hidden">
+                          <Link to="/admin/dashboard" onClick={() => setIsMenuOpen(false)} className="flex items-center px-4 py-2 text-sm text-red-600 font-bold hover:bg-red-50 transition-colors">
+                            <FaCog className="mr-3 text-red-500" /> Admin Panel
+                          </Link>
+                        </div>
+                      )}
+
                       {/* Personal Links */}
                       <div className="py-1">
                         <Link to="/my-bookings" onClick={() => setIsMenuOpen(false)} className="flex items-center px-4 py-2 text-sm hover:bg-red-50 hover:text-red-600 transition-colors">

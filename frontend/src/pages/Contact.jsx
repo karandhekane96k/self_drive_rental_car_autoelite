@@ -12,7 +12,7 @@ export default function Contact() {
   // Pre-filled WhatsApp message handler
   const handleWhatsAppClick = () => {
     const phoneNumber = "918625881282"; // Replace with your actual WhatsApp business number
-    const message = encodeURIComponent("Hello AutoElite, I need help with renting a car / general inquiry.");
+    const message = encodeURIComponent("Hello Nandi Cars, I need help with renting a car / general inquiry.");
     window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
   };
 

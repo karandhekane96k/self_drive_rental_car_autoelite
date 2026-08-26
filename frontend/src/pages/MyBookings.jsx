@@ -15,7 +15,7 @@ export default function MyBookings() {
       if (!user) return;
       try {
         const userId = user._id || user.id;
-        const response = await fetch(`https://self-drive-rental-car-autoelite.onrender.com/api/bookings/my-bookings?userId=${userId}`);
+        const response = await fetch(`https://self-drive-rental-car-Nandi Cars.onrender.com/api/bookings/my-bookings?userId=${userId}`);
         const data = await response.json();
         setBookings(data);
         setLoading(false);

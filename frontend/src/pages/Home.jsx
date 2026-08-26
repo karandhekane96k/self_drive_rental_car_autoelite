@@ -31,19 +31,20 @@ export default function Home() {
   const slides = [
     {
       id: 1,
-      image: "https://images.unsplash.com/photo-1503376712341-ea7a64115451?q=80&w=2070&auto=format&fit=crop", 
+      // FIXED: Brand new, reliable luxury car image for the first slide!
+      image: "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?q=80&w=2066&auto=format&fit=crop", 
       title: "Drive in Luxury",
       subtitle: "Unleash the power of luxury on every journey."
     },
     {
       id: 2,
-      image: "https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?q=80&w=2064&auto=format&fit=crop", 
+      image: "https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?q=80&w=2069&auto=format&fit=crop", 
       title: "Premium Fleet",
       subtitle: "Choose from our exclusive collection of high-end vehicles."
     },
     {
       id: 3,
-      image: "https://images.unsplash.com/photo-1563720225642-1e523f034033?q=80&w=2070&auto=format&fit=crop", 
+      image: "https://images.unsplash.com/photo-1583121274602-3e2820c69888?q=80&w=2070&auto=format&fit=crop", 
       title: "Unmatched Power",
       subtitle: "Feel the thrill of engineering mastery."
     }
@@ -74,7 +75,7 @@ export default function Home() {
     <div className="flex flex-col min-h-screen bg-white">
       
       {/* Hero Slider Section */}
-      <div className="w-full h-[600px] relative bg-gray-900">
+      <div className="w-full h-screen relative bg-gray-900">
         <Swiper
           modules={[Navigation, Pagination, Autoplay]}
           navigation={true}
@@ -89,15 +90,15 @@ export default function Home() {
                 className="w-full h-full bg-cover bg-center flex items-center justify-center relative"
                 style={{ backgroundImage: `url(${slide.image})` }}
               >
-                <div className="absolute inset-0 bg-black/60"></div>
-                <div className="relative z-10 text-center px-4">
-                  <h1 className="text-5xl md:text-7xl font-extrabold uppercase tracking-tight text-white mb-4">
+                <div className="absolute inset-0 bg-black/40"></div>
+                <div className="relative z-10 text-center px-4 mt-20 md:mt-0">
+                  <h1 className="text-5xl md:text-7xl font-extrabold uppercase tracking-tight text-white mb-4 drop-shadow-lg">
                     {slide.title}
                   </h1>
-                  <p className="max-w-2xl mx-auto text-lg md:text-xl text-gray-300 mb-8 leading-relaxed">
+                  <p className="max-w-2xl mx-auto text-lg md:text-xl text-gray-200 mb-8 leading-relaxed drop-shadow-md">
                     {slide.subtitle}
                   </p>
-                  <Link to="/fleet" className="bg-red-600 hover:bg-red-700 text-white font-bold py-4 px-10 rounded-sm uppercase tracking-widest transition-colors inline-block">
+                  <Link to="/fleet" className="bg-red-600 hover:bg-red-700 text-white font-bold py-4 px-10 rounded-sm uppercase tracking-widest transition-colors inline-block shadow-lg">
                     Explore Fleet
                   </Link>
                 </div>

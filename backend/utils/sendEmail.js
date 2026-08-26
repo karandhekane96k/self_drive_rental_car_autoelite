@@ -11,7 +11,7 @@ const sendEmail = async (options) => {
     });
 
     const mailOptions = {
-      from: `AutoElite <${process.env.EMAIL_USER}>`,
+      from: `Nandi Cars <${process.env.EMAIL_USER}>`,
       to: options.email,
       subject: options.subject,
       html: options.message,

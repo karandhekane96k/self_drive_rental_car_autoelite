@@ -13,7 +13,7 @@ export default function AdminBookings() {
 
   const fetchBookings = async () => {
     try {
-      const response = await fetch('https://self-drive-rental-car-autoelite.onrender.com/api/bookings');
+      const response = await fetch('https://self-drive-rental-car-Nandi Cars.onrender.com/api/bookings');
       const data = await response.json();
       setBookings(data);
       setLoading(false);
@@ -25,7 +25,7 @@ export default function AdminBookings() {
 
   const markNotificationsAsRead = async () => {
     try {
-      await fetch('https://self-drive-rental-car-autoelite.onrender.com/api/bookings/read', { method: 'PATCH' });
+      await fetch('https://self-drive-rental-car-Nandi Cars.onrender.com/api/bookings/read', { method: 'PATCH' });
     } catch (error) {
       console.error('Failed to clear notification badges', error);
     }

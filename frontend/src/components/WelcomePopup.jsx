@@ -24,8 +24,8 @@ export default function WelcomePopup({ onClose }) {
     );
 
     const url = isLogin 
-      ? 'https://self-drive-rental-car-autoelite.onrender.com/api/users/login' 
-      : 'https://self-drive-rental-car-autoelite.onrender.com/api/users';
+      ? 'https://self-drive-rental-car-Nandi Cars.onrender.com/api/users/login' 
+      : 'https://self-drive-rental-car-Nandi Cars.onrender.com/api/users';
 
     const bodyData = isLogin 
       ? { email, password } 

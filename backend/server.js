@@ -22,7 +22,7 @@ app.use(express.json());
 
 // A simple test route
 app.get("/api/test", (req, res) => {
-  res.json({ message: "AutoElite Backend is running successfully!" });
+  res.json({ message: "Nandi Cars Backend is running successfully!" });
 });
 
 // Route connections
