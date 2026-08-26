@@ -23,9 +23,10 @@ export default function WelcomePopup({ onClose }) {
       isLogin ? '🔄 Authenticating credentials...' : '⏳ Creating your Nandi Cars account...'
     );
 
+    // FIXED: Restored the correct Render server URL!
     const url = isLogin 
-      ? 'https://self-drive-rental-car-Nandi Cars.onrender.com/api/users/login' 
-      : 'https://self-drive-rental-car-Nandi Cars.onrender.com/api/users';
+      ? 'https://self-drive-rental-car-autoelite.onrender.com/api/users/login' 
+      : 'https://self-drive-rental-car-autoelite.onrender.com/api/users';
 
     const bodyData = isLogin 
       ? { email, password } 
