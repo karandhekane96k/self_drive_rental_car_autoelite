@@ -1,37 +1,26 @@
-import path from 'path';
 import express from 'express';
-import multer from 'multer';
-import fs from 'fs';
+import { upload } from '../utils/uploadConfig.js';
 
 const router = express.Router();
 
-// 1. Ensure the 'uploads' folder exists on your computer
-const uploadDir = path.join(process.cwd(), 'uploads');
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir);
-}
-
-// 2. Configure where and how the file is saved
-const storage = multer.diskStorage({
-  destination(req, file, cb) {
-    cb(null, 'uploads/');
-  },
-  filename(req, file, cb) {
-    // Rename the file to prevent duplicates (e.g., car-169283726.jpg)
-    cb(null, `car-${Date.now()}${path.extname(file.originalname)}`);
-  },
-});
-
-const upload = multer({ storage });
-
-// 3. The actual route that catches the file
+// Upload image directly to Cloudinary
 router.post('/', upload.single('image'), (req, res) => {
-  const fullUrl = `https://self-drive-rental-car-autoelite.onrender.com/uploads/${req.file.filename}`;
-  res.send({
-    message: 'Image Uploaded Successfully',
-    image: fullUrl,
-    imageUrl: fullUrl // Added so both frontend key checks pass successfully
-  });
+  try {
+    if (!req.file) {
+      return res.status(400).json({ message: 'No image file provided' });
+    }
+
+    // Cloudinary automatically attaches the permanent cloud URL to req.file.path
+    const fullUrl = req.file.path;
+
+    res.status(200).send({
+      message: 'Image Uploaded Successfully',
+      image: fullUrl,
+      imageUrl: fullUrl, // Keeps both keys compatible with your frontend
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Image upload failed', error: error.message });
+  }
 });
 
 export default router;
