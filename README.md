@@ -21,4 +21,4 @@ AutoElite is a comprehensive full-stack vehicle rental platform built with the M
 ## 👨‍💻 Team & Collaborators
 This project was collaboratively developed by:
 * **Karan Dhekane** - Full-Stack Developer 
-* **Rutwik Pande** - MERN Stack Developer
+* **Rutwik Pande** - Full-Stack Developer
